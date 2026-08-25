@@ -23,6 +23,6 @@ struct Memory {
     }
 
     func readWord(at: Int) -> UInt16 {
-        return UInt16(data[at + 1] << 8) | UInt16(data[at])
+        return (UInt16(data[at + 1]) << 8) | UInt16(data[at])
     }
 }
