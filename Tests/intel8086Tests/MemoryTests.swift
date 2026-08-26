@@ -45,15 +45,6 @@ final class MemoryTests: XCTestCase {
         XCTAssertEqual(memory[0xFFFFF], 0x12)
     }
 
-    // func testAddressWrapAroundMemory() {
-    //     var memory = Memory()
-
-    //     memory[0xFFFFF] = 0x34
-    //     memory[0x00000] = 0x12
-
-    //     XCTAssertEqual(memory.readWord(at: 0xFFFFF), 0x1234)
-    // }
-
     func testMemoryAddressWrapsAround() {
         var memory = Memory()
 
