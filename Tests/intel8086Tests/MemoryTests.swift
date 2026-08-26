@@ -13,9 +13,9 @@ final class MemoryTests: XCTestCase {
     func testMemoryCanWriteByte() {
         var memory = Memory()
 
-        memory[0x12345] = 0xab
+        memory[0x12345] = 0xAB
 
-        XCTAssertEqual(memory[0x12345], 0xab)
+        XCTAssertEqual(memory[0x12345], 0xAB)
     }
 
     func testWriteWordUsesLittleEndian() {
@@ -45,4 +45,33 @@ final class MemoryTests: XCTestCase {
         XCTAssertEqual(memory[0xFFFFF], 0x12)
     }
 
+    // func testAddressWrapAroundMemory() {
+    //     var memory = Memory()
+
+    //     memory[0xFFFFF] = 0x34
+    //     memory[0x00000] = 0x12
+
+    //     XCTAssertEqual(memory.readWord(at: 0xFFFFF), 0x1234)
+    // }
+
+    func testMemoryAddressWrapsAround() {
+        var memory = Memory()
+
+        memory[0xFFFFF] = 0x34
+        memory[0x00000] = 0x12
+        XCTAssertEqual(memory.readWord(at: 0xFFFFF), 0x1234)
+    }
+
+    func testMemoryAddressWrapsAroundMultipleTimes() {
+        var memory = Memory()
+        memory.writeWord(0xAB, at: 0x00000)
+
+        XCTAssertEqual(memory.readWord(at: 0x100000), 0xAB)
+        XCTAssertEqual(memory.readWord(at: 0x200000), 0xAB)
+    }
+
+    func testLimits() {
+        var memory = Memory()
+        memory.writeWord(0x0000, at: 0x00000)
+    }
 }

@@ -1,5 +1,6 @@
 # Intel 8086 Emulator
 
+
 Uma implementação em Swift do processador Intel 8086, focada na emulação da arquitetura de 16 bits, manipulação de registradores, endereçamento de memória segmentada e execução de instruções.
 
 ---
@@ -7,6 +8,10 @@ Uma implementação em Swift do processador Intel 8086, focada na emulação da 
 ## Visão Geral
 
 O projeto oferece um modelo estruturado e modular da arquitetura x86 original de 16 bits. Desenvolvido utilizando o Swift Package Manager (SPM), o emulador abstrai os componentes vitais da CPU em módulos coesos e testáveis.
+
+
+<img width="600" height="400" alt="Intel_C8086" src="https://github.com/user-attachments/assets/9b83c644-cb3b-4c0b-8ced-a3b375957da7" />
+
 
 ## Arquitetura e Componentes
 

@@ -9,7 +9,7 @@ struct Registers {
     // var si: Register16
     // var di: Register16
 
-    var cs = Register16(value: 0xffff)
+    var cs = Register16(value: 0xFFFF)
     // var ds: Register16
     // var es: Register16
     // var ss: Register16
