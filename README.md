@@ -1,5 +1,6 @@
 # Intel 8086 Emulator
 
+> *Built with Swift, curiosity, and an unreasonable amount of hexadecimal.*
 
 <img width="600" height="400" alt="Intel_C8086" src="https://github.com/user-attachments/assets/9b83c644-cb3b-4c0b-8ced-a3b375957da7" />
 
@@ -73,6 +74,7 @@ Intel8086
 └── Instruction Execution
 
 ```
+
 ## Licença
 
 Este projeto é disponibilizado sob a licença MIT.
