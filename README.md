@@ -1,87 +1,78 @@
 # Intel 8086 Emulator
 
 
-Uma implementação em Swift do processador Intel 8086, focada na emulação da arquitetura de 16 bits, manipulação de registradores, endereçamento de memória segmentada e execução de instruções.
-
----
-
-## Visão Geral
-
-O projeto oferece um modelo estruturado e modular da arquitetura x86 original de 16 bits. Desenvolvido utilizando o Swift Package Manager (SPM), o emulador abstrai os componentes vitais da CPU em módulos coesos e testáveis.
-
-
 <img width="600" height="400" alt="Intel_C8086" src="https://github.com/user-attachments/assets/9b83c644-cb3b-4c0b-8ced-a3b375957da7" />
 
 
-## Arquitetura e Componentes
+Um emulador do **Intel 8086** feito em Swift.
 
-- **Registradores de 16 bits (`Register16`)**: Abstração com acesso direto e síncrono às metades superior (`high`) e inferior (`low`) de 8 bits.
-- **Gerenciamento de Memória (`Memory`)**: Emulação do mapa de memória de 1 MB (1.048.576 bytes) com suporte ao padrão Little-Endian para leitura e escrita de palavras (`readWord` e `writeWord`).
-- **Endereçamento Físico (`Intel8086`)**: Cálculo de endereçamento segmentado real de 20 bits derivado do registrador de segmento de código e ponteiro de instrução (`CS << 4 + IP`).
-- **Registradores e Flags**: Estruturação dos registradores de propósito geral, de segmento e sinalizadores de estado do processador.
+Esse projeto começou como uma forma de voltar a estudar arquitetura de computadores e entender, na prática, como um processador de 16 bits funciona por dentro.
 
-## Requisitos
+A ideia é construir o emulador aos poucos, começando pelos fundamentos — registradores, memória, flags e ALU — e eventualmente chegar à execução das instruções do 8086.
 
-- Swift 5.9 ou superior
-- macOS 13+ ou Linux com Swift Toolchain instalado
+Estou desenvolvendo tudo usando **TDD**, então cada parte nova começa pelos testes antes da implementação.
 
-## Compilação e Testes
+## Status
 
-O projeto utiliza o Swift Package Manager nativo.
+🚧 Em desenvolvimento
 
-### Compilação do Módulo
+Atualmente já temos:
 
-Para compilar a biblioteca:
+- [x] Registradores de 16 bits
+- [x] Memória de 1 MB
+- [x] Endereçamento segmentado
+- [x] FLAGS
+- [ ] ALU
+- [ ] Instruções
+- [ ] Stack
+- [ ] Interrupções
+- [ ] Ciclo de busca e execução
+- [ ] ...
+  
+## Por que Swift?
 
-```bash
-swift build
-```
+Porque é a linguagem que uso profissionalmente e achei interessante usar uma linguagem moderna para implementar uma arquitetura de 1978.
 
-### Execução dos Testes
+Além disso, implementar algo tão baixo nível em uma linguagem como Swift é uma experiência interessante por si só.
 
-Para rodar a suíte de testes automatizados:
+## Objetivo
 
-```bash
-swift test
-```
+Mais do que criar um emulador completo, a ideia é **aprender**.
 
-## Exemplo de Uso
+Quero entender o 8086 de baixo para cima, descobrir como cada parte funciona e registrar esse processo no código.
 
-```swift
-import Intel8086
+Não estou tentando simplesmente reproduzir um emulador existente. Quero construir cada componente entendendo o motivo de ele existir e como ele se comportava no hardware original.
 
-// Inicialização do emulador e memória
-var cpu = Intel8086()
-var memory = Memory()
+## Desenvolvimento
 
-// Leitura do endereço físico atual em modo real (CS:IP)
-let physicalAddress = cpu.physicalAddress
+O projeto utiliza **Swift Package Manager** e **XCTest**.
 
-// Leitura e escrita de palavras de 16 bits na memória
-memory.writeWord(0x1234, at: 0x0000)
-let value = memory.readWord(at: 0x0000) // Retorna 0x1234
-```
+A implementação está sendo desenvolvida seguindo uma abordagem de **Test-Driven Development (TDD)**:
 
-## Estrutura do Projeto
+1. Criar o teste
+2. Fazer o teste falhar
+3. Implementar o comportamento
+4. Fazer o teste passar
+5. Refatorar quando necessário
+
+Os testes também são executados automaticamente através do **GitHub Actions**.
+
+## Arquitetura
+
+A implementação está sendo construída de forma incremental.
+
+A ideia é separar os principais componentes do processador:
+
 
 ```text
-Intel8086/
-├── Package.swift
-├── Sources/
-│   └── Intel8086/
-│       ├── Intel8086.swift
-│       ├── Memory.swift
-│       ├── Register16.swift
-│       ├── Registers.swift
-│       └── Flags.swift
-└── Tests/
-    └── Intel8086Tests/
-        ├── Intel8086Tests.swift
-        ├── MemoryTests.swift
-        ├── Register16Tests.swift
-        └── RegistersTests.swift
-```
+Intel8086
+├── Registers
+├── Flags
+├── Memory
+├── ALU
+└── Instruction Execution
 
+```
 ## Licença
 
 Este projeto é disponibilizado sob a licença MIT.
