@@ -461,4 +461,42 @@ final class ALUTests: XCTestCase {
         XCTAssertEqual(alu.not(0xFF), 0x00)
         XCTAssertFalse(flags.auxiliaryCarry)
     }
+
+    func testNotPreservesAllFlags() {
+        flags.carry = true
+        flags.overflow = true
+        flags.zero = true
+        flags.sign = true
+        flags.parity = true
+        flags.auxiliaryCarry = true
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.overflow)
+        XCTAssertTrue(flags.zero)
+        XCTAssertTrue(flags.sign)
+        XCTAssertTrue(flags.parity)
+        XCTAssertTrue(flags.auxiliaryCarry)
+        XCTAssertEqual(alu.not(0xFF), 0x00)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.overflow)
+        XCTAssertTrue(flags.zero)
+        XCTAssertTrue(flags.sign)
+        XCTAssertTrue(flags.parity)
+        XCTAssertTrue(flags.auxiliaryCarry)
+        XCTAssertEqual(alu.add(0x01, 0x01, &flags), 0x02)
+
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.overflow)
+        XCTAssertFalse(flags.zero)
+        XCTAssertFalse(flags.sign)
+        XCTAssertFalse(flags.parity)
+        XCTAssertFalse(flags.auxiliaryCarry)
+
+        XCTAssertEqual(alu.not(0xFF), 0x00)
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.overflow)
+        XCTAssertFalse(flags.zero)
+        XCTAssertFalse(flags.sign)
+        XCTAssertFalse(flags.parity)
+        XCTAssertFalse(flags.auxiliaryCarry)
+    }
 }
