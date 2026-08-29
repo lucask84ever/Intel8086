@@ -43,9 +43,13 @@ final class ALUTests: XCTestCase {
 
     func testSignFlagTrue() {
 
-        let result = alu.add(0x80, 1, &flags)
+        var result = alu.add(0x80, 1, &flags)
         XCTAssertTrue(flags.sign)
         XCTAssertEqual(result, 0x81)
+        // second operation
+        result = alu.add(0x40, 1, &flags)
+        XCTAssertFalse(flags.sign)
+        XCTAssertEqual(result, 0x41)
     }
 
     func testSignFlagFalse() {
@@ -57,10 +61,16 @@ final class ALUTests: XCTestCase {
 
     func testAddSetsParityFlagForEvenNumberOfOnes() {
 
-        let result = alu.add(0x01, 0x02, &flags)
+        var result = alu.add(0x01, 0x02, &flags)
 
         XCTAssertEqual(result, 0x03)
         XCTAssertTrue(flags.parity)
+
+        // second operation
+        result = alu.add(0x03, 0x04, &flags)
+
+        XCTAssertEqual(result, 0x07)
+        XCTAssertFalse(flags.parity)
     }
 
     func testAddSetsParityFlagForOddNumberOfOnes() {
@@ -73,10 +83,16 @@ final class ALUTests: XCTestCase {
 
     func testAddSetsAuxiliaryCarry() {
 
-        let result = alu.add(0x0F, 0x01, &flags)
+        var result = alu.add(0x0F, 0x01, &flags)
 
         XCTAssertTrue(flags.auxiliary)
         XCTAssertEqual(result, 0x10)
+
+        // second operation
+        result = alu.add(0x05, 0x01, &flags)
+
+        XCTAssertFalse(flags.auxiliary)
+        XCTAssertEqual(result, 0x06)
     }
 
     func testAddDoesNotSetAuxiliaryCarry() {
@@ -90,12 +106,13 @@ final class ALUTests: XCTestCase {
         let result = alu.add(0x01, 0x7F, &flags)
 
         XCTAssertEqual(result, 0x80)
-        XCTAssertFalse(flags.carry)
         XCTAssertTrue(flags.overflow)
+        XCTAssertFalse(flags.carry)
     }
 
-    func testUnsignedOverflowWithCarry() {
+    func testSignedOverflowAlsoSetsCarry() {
         let result = alu.add(0x80, 0x80, &flags)
+        
         XCTAssertEqual(result, 0x00)
         XCTAssertTrue(flags.carry)
         XCTAssertTrue(flags.overflow)
@@ -112,9 +129,13 @@ final class ALUTests: XCTestCase {
         var result = alu.add(0x7F, 0x01, &flags)
         XCTAssertEqual(result, 0x80)
         XCTAssertTrue(flags.overflow)
+
+        // second operation
         result = alu.add(0x80, 0x80, &flags)
         XCTAssertEqual(result, 0x00)
         XCTAssertTrue(flags.overflow)
+
+        // third operation
         result = alu.add(0x7F, 0xFF, &flags)
         XCTAssertEqual(result, 0x7E)
         XCTAssertFalse(flags.overflow)
