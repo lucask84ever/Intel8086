@@ -18,7 +18,6 @@ final class ALUTests: XCTestCase {
         super.tearDown()
     }
 
-
 // ADD
     func testAddTwoBytes() {
 
@@ -311,6 +310,7 @@ final class ALUTests: XCTestCase {
 
         var result = alu.or(lhs, rhs, &flags)
         XCTAssertEqual(result, 0xFF)
+        XCTAssertFalse(flags.zero)
 
         lhs = 0xCC
         rhs = 0xAA
@@ -326,6 +326,15 @@ final class ALUTests: XCTestCase {
         rhs = 0x0C
         result = alu.or(lhs, rhs, &flags)
         XCTAssertEqual(result, 0x0C)
+
+        XCTAssertEqual(alu.or(0x00, 0x00, &flags), 0x00)
+        XCTAssertTrue(flags.zero)
+
+        XCTAssertEqual(alu.or(0x00, 0x80, &flags), 0x80)
+        XCTAssertTrue(flags.sign)
+
+        XCTAssertEqual(alu.or(0x00, 0x01, &flags), 0x01)
+        XCTAssertFalse(flags.sign)
     }
 
     func testXOR() {

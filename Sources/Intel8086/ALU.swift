@@ -48,7 +48,11 @@ struct ALU {
 
     func or(_ lhs: UInt8, _ rhs: UInt8, _ flags: inout Flags) -> UInt8 {
         let value = lhs | rhs
-        
+        flags.carry = false
+        flags.overflow = false
+        flags.zero = value == 0
+        flags.sign = (value & 0x80) != 0
+        flags.parity = hasEvenParity(value)
         return value
     }
 
