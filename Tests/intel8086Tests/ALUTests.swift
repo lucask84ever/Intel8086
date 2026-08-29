@@ -222,4 +222,132 @@ final class ALUTests: XCTestCase {
         XCTAssertTrue(flags.auxiliaryCarry)
         XCTAssertTrue(flags.carry)
     }
+
+    func testAnd() {
+        let resultAdd = alu.add(0x80, 0x80, &flags)
+
+        XCTAssertEqual(resultAdd, 0x00)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.overflow)
+
+        var result = alu.and(0x0C, 0x0A, &flags)
+        XCTAssertEqual(result, 0x08)
+        XCTAssertFalse(flags.zero)
+        XCTAssertFalse(flags.sign)
+
+        result = alu.and(0xFF, 0x0F, &flags)
+        XCTAssertEqual(result, 0x0F)
+
+        result = alu.and(0xFF, 0x80, &flags)
+        XCTAssertTrue(flags.sign)
+
+        result = alu.and(0x0C, 0x0A, &flags)
+        XCTAssertFalse(flags.sign)
+
+        result = alu.and(0x00, 0xFF, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.zero)
+
+        result = alu.and(0x0C, 0x0A, &flags)
+        XCTAssertEqual(result, 0x08)
+        XCTAssertFalse(flags.zero)
+
+        // FORÇAR
+        result = alu.add(0xFF, 0x81, &flags)
+        XCTAssertEqual(result, 0x80)
+        XCTAssertTrue(flags.sign)
+        XCTAssertFalse(flags.parity)
+        XCTAssertFalse(flags.zero)
+    }
+
+    func testOr() {
+        var result = alu.or(0x0C, 0x0A, &flags)
+        XCTAssertEqual(result, 0x0E)
+
+        result = alu.or(0xFF, 0x0F, &flags)
+        XCTAssertEqual(result, 0xFF)
+
+        result = alu.or(0x00, 0xFF, &flags)
+        XCTAssertEqual(result, 0xFF)
+    }
+
+    func testXor() {
+        var result = alu.xor(0x01, 0x03, &flags)
+        XCTAssertEqual(result, 0x02)
+
+        result = alu.xor(0x07, 0x0F, &flags)
+        XCTAssertEqual(result, 0x08)
+    }
+
+    func testAND() {
+        var lhs = UInt8(0xAA)
+        var rhs = UInt8(0x55)
+        
+
+        var result = alu.and(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.overflow)
+
+        lhs = 0xCC
+        rhs = 0xAA
+        result = alu.and(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x88)
+
+        lhs = 0xF0
+        rhs = 0x0F
+        result = alu.and(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x00)
+
+        lhs = 0x08
+        rhs = 0x0C
+        result = alu.and(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x08)
+    }
+
+    func testOR() {
+        var lhs = UInt8(0xAA)
+        var rhs = UInt8(0x55)
+
+        var result = alu.or(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0xFF)
+
+        lhs = 0xCC
+        rhs = 0xAA
+        result = alu.or(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0xEE)
+
+        lhs = 0xF0
+        rhs = 0x0F
+        result = alu.or(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0xFF)
+
+        lhs = 0x08
+        rhs = 0x0C
+        result = alu.or(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x0C)
+    }
+
+    func testXOR() {
+        var lhs = UInt8(0xAA)
+        var rhs = UInt8(0x55)
+
+        var result = alu.xor(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0xFF)
+
+        lhs = 0xCC
+        rhs = 0xAA
+        result = alu.xor(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x66)
+
+        lhs = 0xF0
+        rhs = 0x0F
+        result = alu.xor(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0xFF)
+
+        lhs = 0x08
+        rhs = 0x0C
+        result = alu.xor(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x04)
+    }
 }

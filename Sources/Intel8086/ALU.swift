@@ -36,6 +36,26 @@ struct ALU {
         return value
     }
 
+    func and(_ lhs: UInt8, _ rhs: UInt8, _ flags: inout Flags) -> UInt8 {
+        let value = lhs & rhs
+        flags.carry = false
+        flags.overflow = false
+        flags.parity = hasEvenParity(value)
+        flags.sign = (value & 0x80) != 0
+        flags.zero = value == 0
+        return value
+    }
+
+    func or(_ lhs: UInt8, _ rhs: UInt8, _ flags: inout Flags) -> UInt8 {
+        let value = lhs | rhs
+        
+        return value
+    }
+
+    func xor(_ lhs: UInt8, _ rhs: UInt8, _ flags: inout Flags) -> UInt8 {
+        return lhs ^ rhs
+    }
+
     private func hasEvenParity(_ value: UInt8) -> Bool {
         var value = value
         var count = 0
