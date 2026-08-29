@@ -46,24 +46,24 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFFFB)
     }
 
-    func testChangeAuxiliaryFlagUsesBitZero() {
+    func testChangeauxiliaryCarryFlagUsesBitZero() {
         var flags = Flags(value: 0x0000)
 
-        flags.auxiliary = true
+        flags.auxiliaryCarry = true
         XCTAssertEqual(flags.value, 0x0010)
     }
 
-    func testCarryAuxiliaryCanBeCleared() {
+    func testCarryauxiliaryCarryCanBeCleared() {
         var flags = Flags(value: 0x0010)
 
-        flags.auxiliary = false
+        flags.auxiliaryCarry = false
         XCTAssertEqual(flags.value, 0x0000)
     }
 
-    func testChangingAuxiliaryDoesNotChangeOtherFlags() {
+    func testChangingauxiliaryCarryDoesNotChangeOtherFlags() {
         var flags = Flags(value: 0xFFFF)
 
-        flags.auxiliary = false
+        flags.auxiliaryCarry = false
         XCTAssertEqual(flags.value, 0xFFEF)
     }
 
@@ -198,7 +198,7 @@ final class FlagsTests: XCTestCase {
 
         flags.carry = false
         flags.parity = false
-        flags.auxiliary = false
+        flags.auxiliaryCarry = false
         flags.zero = false
         flags.sign = false
         flags.trap = false
@@ -213,7 +213,7 @@ final class FlagsTests: XCTestCase {
 
         flags.carry = true
         flags.parity = true
-        flags.auxiliary = true
+        flags.auxiliaryCarry = true
         flags.zero = true
         flags.sign = true
         flags.trap = true
