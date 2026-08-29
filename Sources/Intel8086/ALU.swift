@@ -57,7 +57,13 @@ struct ALU {
     }
 
     func xor(_ lhs: UInt8, _ rhs: UInt8, _ flags: inout Flags) -> UInt8 {
-        return lhs ^ rhs
+        let value = lhs ^ rhs
+        flags.carry = false
+        flags.overflow = false
+        flags.zero = value == 0
+        flags.parity = hasEvenParity(value)
+        flags.sign = (value & 0x80) != 0
+        return value
     }
 
     private func hasEvenParity(_ value: UInt8) -> Bool {

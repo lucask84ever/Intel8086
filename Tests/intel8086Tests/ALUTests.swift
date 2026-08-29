@@ -358,5 +358,36 @@ final class ALUTests: XCTestCase {
         rhs = 0x0C
         result = alu.xor(lhs, rhs, &flags)
         XCTAssertEqual(result, 0x04)
+
+        lhs = 0x01
+        rhs = 0x01
+
+        result = alu.xor(lhs, rhs, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertEqual(alu.xor(0xAA, 0x55, &flags), 0xFF)
+        XCTAssertEqual(alu.xor(0xCC, 0xAA, &flags), 0x66)
+        XCTAssertEqual(alu.xor(0xF0, 0x0F, &flags), 0xFF)
+        XCTAssertEqual(alu.xor(0x08, 0x0C, &flags), 0x04)
+        XCTAssertFalse(flags.sign)
+        XCTAssertEqual(alu.xor(0xFF, 0xFF, &flags), 0x00)
+        XCTAssertEqual(alu.xor(0x00, 0x00, &flags), 0x00)
+        XCTAssertTrue(flags.zero)
+        XCTAssertEqual(alu.xor(0xFF, 0x7F, &flags), 0x80)
+        XCTAssertTrue(flags.sign)
+        XCTAssertEqual(alu.xor(0x00, 0xAA, &flags), 0xAA)
+        XCTAssertTrue(flags.parity)
+        XCTAssertEqual(alu.xor(0x00, 0x07, &flags), 0x07)
+        XCTAssertFalse(flags.parity)
+    }
+
+    func testCarryAndOverflowWithXOR() {
+        let result = alu.add(0x80, 0x80, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.overflow)
+
+        XCTAssertEqual(alu.xor(0xAA, 0x55, &flags), 0xFF)
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.overflow)
     }
 }
