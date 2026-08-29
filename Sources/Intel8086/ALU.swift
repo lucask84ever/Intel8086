@@ -66,6 +66,10 @@ struct ALU {
         return value
     }
 
+    func not(_ value: UInt8) -> UInt8 {
+        return ~value
+    }
+
     private func hasEvenParity(_ value: UInt8) -> Bool {
         var value = value
         var count = 0
