@@ -290,7 +290,7 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.auxiliaryCarry)
     }
 
-    func testOR() {
+    func testOr() {
         var lhs = UInt8(0xAA)
         var rhs = UInt8(0x55)
         var result = alu.or(lhs, rhs, &flags)
@@ -358,7 +358,7 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.auxiliaryCarry)
     }
 
-    func testXOR() {
+    func testXor() {
         var lhs = UInt8(0xAA)
         var rhs = UInt8(0x55)
         var result = alu.xor(lhs, rhs, &flags)
