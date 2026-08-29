@@ -18,132 +18,80 @@ final class ALUTests: XCTestCase {
         super.tearDown()
     }
 
-// ADD
+    // MARK: - ADD
+
     func testAddTwoBytes() {
-
         let result = alu.add(5, 3, &flags)
-
-        XCTAssertFalse(flags.carry)
         XCTAssertEqual(result, 0x08)
-    }
-
-    func testOverflowUInt8() {
-
-        let result = alu.add(UInt8.max, 1, &flags)
-        XCTAssertTrue(flags.zero)
-        XCTAssertTrue(flags.carry)
-        XCTAssertEqual(result, 0x00)
-    }
-
-    func testSixtyFourUInt8() {
-
-        let result = alu.add(0x40, 0x40, &flags)
-        XCTAssertTrue(flags.sign)
-        XCTAssertEqual(result, 0x80)
-    }
-
-    func testSignFlagTrue() {
-
-        var result = alu.add(0x80, 1, &flags)
-        XCTAssertTrue(flags.sign)
-        XCTAssertEqual(result, 0x81)
-        // second operation
-        result = alu.add(0x40, 1, &flags)
-        XCTAssertFalse(flags.sign)
-        XCTAssertEqual(result, 0x41)
-    }
-
-    func testSignFlagFalse() {
-
-        let result = alu.add(0x40, 1, &flags)
-        XCTAssertEqual(result, 0x41)
-        XCTAssertFalse(flags.sign)
-    }
-
-    func testAddSetsParityFlagForEvenNumberOfOnes() {
-
-        var result = alu.add(0x01, 0x02, &flags)
-
-        XCTAssertEqual(result, 0x03)
-        XCTAssertTrue(flags.parity)
-
-        // second operation
-        result = alu.add(0x03, 0x04, &flags)
-
-        XCTAssertEqual(result, 0x07)
-        XCTAssertFalse(flags.parity)
-    }
-
-    func testAddSetsParityFlagForOddNumberOfOnes() {
-
-        let result = alu.add(0x03, 0x04, &flags)
-
-        XCTAssertEqual(result, 0x07)
-        XCTAssertFalse(flags.parity)
-    }
-
-    func testAddSetsauxiliaryCarry() {
-
-        var result = alu.add(0x0F, 0x01, &flags)
-
-        XCTAssertTrue(flags.auxiliaryCarry)
-        XCTAssertEqual(result, 0x10)
-
-        // second operation
-        result = alu.add(0x05, 0x01, &flags)
-
-        XCTAssertFalse(flags.auxiliaryCarry)
-        XCTAssertEqual(result, 0x06)
-    }
-
-    func testAddDoesNotSetauxiliaryCarry() {
-        let result = alu.add(0x05, 0x01, &flags)
-
-        XCTAssertFalse(flags.auxiliaryCarry)
-        XCTAssertEqual(result, 0x06)
-    }
-
-    func testSignedOverflow() {
-        let result = alu.add(0x01, 0x7F, &flags)
-
-        XCTAssertEqual(result, 0x80)
-        XCTAssertTrue(flags.overflow)
         XCTAssertFalse(flags.carry)
     }
 
-    func testSignedOverflowAlsoSetsCarry() {
-        let result = alu.add(0x80, 0x80, &flags)
-
+    func testAddCarryAndOverflow() {
+        var result = alu.add(UInt8.max, 1, &flags)
         XCTAssertEqual(result, 0x00)
         XCTAssertTrue(flags.carry)
-        XCTAssertTrue(flags.overflow)
-    }
 
-    func testNoSignedOverflowWithDifferentSigns() {
-        let result = alu.add(0x7f, 0xFF, &flags)
-
-        XCTAssertEqual(result, 0x7E)
-        XCTAssertFalse(flags.overflow)
-    }
-
-    func testOverflowReset() {
-        var result = alu.add(0x7F, 0x01, &flags)
+        result = alu.add(0x01, 0x7F, &flags)
         XCTAssertEqual(result, 0x80)
         XCTAssertTrue(flags.overflow)
+        XCTAssertFalse(flags.carry)
 
-        // second operation
         result = alu.add(0x80, 0x80, &flags)
         XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.carry)
         XCTAssertTrue(flags.overflow)
 
-        // third operation
         result = alu.add(0x7F, 0xFF, &flags)
         XCTAssertEqual(result, 0x7E)
         XCTAssertFalse(flags.overflow)
-
     }
 
-    // SUB
+    func testAddZeroFlag() {
+        var result = alu.add(UInt8.max, 1, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.zero)
+
+        result = alu.add(0x01, 0x01, &flags)
+        XCTAssertEqual(result, 0x02)
+        XCTAssertFalse(flags.zero)
+    }
+
+    func testAddSignFlag() {
+        var result = alu.add(0x40, 0x40, &flags)
+        XCTAssertEqual(result, 0x80)
+        XCTAssertTrue(flags.sign)
+
+        result = alu.add(0x80, 1, &flags)
+        XCTAssertEqual(result, 0x81)
+        XCTAssertTrue(flags.sign)
+
+        result = alu.add(0x40, 1, &flags)
+        XCTAssertEqual(result, 0x41)
+        XCTAssertFalse(flags.sign)
+    }
+
+    func testAddParityFlag() {
+        var result = alu.add(0x01, 0x02, &flags)
+        XCTAssertEqual(result, 0x03)
+        XCTAssertTrue(flags.parity)
+
+        result = alu.add(0x03, 0x04, &flags)
+        XCTAssertEqual(result, 0x07)
+        XCTAssertFalse(flags.parity)
+    }
+
+    func testAddAuxiliaryCarry() {
+        var result = alu.add(0x0F, 0x01, &flags)
+        XCTAssertEqual(result, 0x10)
+        XCTAssertTrue(flags.auxiliaryCarry)
+
+        result = alu.add(0x05, 0x01, &flags)
+        XCTAssertEqual(result, 0x06)
+        XCTAssertFalse(flags.auxiliaryCarry)
+    }
+
+    // MARK: - SUB
+
     func testSubTwoBytes() {
         let result = alu.sub(0x05, 0x03, &flags)
         XCTAssertEqual(result, 0x02)
@@ -162,37 +110,8 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.carry)
     }
 
-    func testResultZero() {
-        var result = alu.sub(0x05, 0x05, &flags)
-        XCTAssertEqual(result, 0x00)
-        XCTAssertTrue(flags.zero)
-
-        result = alu.sub(0x03, 0x05, &flags)
-        XCTAssertEqual(result, 0xFE)
-        XCTAssertFalse(flags.zero)
-
-        result = alu.sub(0xFF, 0xFF, &flags)
-        XCTAssertEqual(result, 0x00)
-        XCTAssertTrue(flags.zero)
-    }
-
-        func testSubSetsParityFlagForEvenNumberOfOnes() {
-
-        var result = alu.sub(0x05, 0x02, &flags)
-
-        XCTAssertEqual(result, 0x03)
-        XCTAssertTrue(flags.parity)
-
-        // second operation
-        result = alu.sub(0x0A, 0x03, &flags)
-
-        XCTAssertEqual(result, 0x07)
-        XCTAssertFalse(flags.parity)
-    }
-
-    func testCarrySignAndOverflow() {
+    func testSubCarryAndOverflow() {
         var result = alu.sub(0x80, 0x01, &flags)
-
         XCTAssertEqual(result, 0x7F)
         XCTAssertFalse(flags.carry)
         XCTAssertFalse(flags.sign)
@@ -209,9 +128,42 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.overflow)
     }
 
-    func testSubauxiliaryCarry() {
-        var result = alu.sub(0x10, 0x01, &flags)
+    func testSubZeroFlag() {
+        var result = alu.sub(0x05, 0x05, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.zero)
 
+        result = alu.sub(0x03, 0x05, &flags)
+        XCTAssertEqual(result, 0xFE)
+        XCTAssertFalse(flags.zero)
+
+        result = alu.sub(0xFF, 0xFF, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.zero)
+    }
+
+    func testSubSignFlag() {
+        var result = alu.sub(0x00, 0x01, &flags)
+        XCTAssertEqual(result, 0xFF)
+        XCTAssertTrue(flags.sign)
+
+        result = alu.sub(0x05, 0x03, &flags)
+        XCTAssertEqual(result, 0x02)
+        XCTAssertFalse(flags.sign)
+    }
+
+    func testSubParityFlag() {
+        var result = alu.sub(0x05, 0x02, &flags)
+        XCTAssertEqual(result, 0x03)
+        XCTAssertTrue(flags.parity)
+
+        result = alu.sub(0x0A, 0x03, &flags)
+        XCTAssertEqual(result, 0x07)
+        XCTAssertFalse(flags.parity)
+    }
+
+    func testSubAuxiliaryCarry() {
+        var result = alu.sub(0x10, 0x01, &flags)
         XCTAssertEqual(result, 0x0F)
         XCTAssertTrue(flags.auxiliaryCarry)
         XCTAssertFalse(flags.carry)
@@ -220,9 +172,15 @@ final class ALUTests: XCTestCase {
         XCTAssertEqual(result, 0xFF)
         XCTAssertTrue(flags.auxiliaryCarry)
         XCTAssertTrue(flags.carry)
+
+        result = alu.sub(0x05, 0x01, &flags)
+        XCTAssertEqual(result, 0x04)
+        XCTAssertFalse(flags.auxiliaryCarry)
     }
 
-    func testAND() {
+    // MARK: - AND
+
+    func testAnd() {
         var lhs = UInt8(0xAA)
         var rhs = UInt8(0x55)
         var result = alu.and(lhs, rhs, &flags)
@@ -289,6 +247,8 @@ final class ALUTests: XCTestCase {
         _ = alu.and(0xFF, 0x0F, &flags)
         XCTAssertFalse(flags.auxiliaryCarry)
     }
+
+    // MARK: - OR
 
     func testOr() {
         var lhs = UInt8(0xAA)
@@ -358,6 +318,8 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.auxiliaryCarry)
     }
 
+    // MARK: - XOR
+
     func testXor() {
         var lhs = UInt8(0xAA)
         var rhs = UInt8(0x55)
@@ -426,12 +388,30 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.auxiliaryCarry)
     }
 
+    // MARK: - NOT
+
     func testNot() {
         XCTAssertEqual(alu.not(0x00), 0xFF)
         XCTAssertEqual(alu.not(0xFF), 0x00)
         XCTAssertEqual(alu.not(0xAA), 0x55)
         XCTAssertEqual(alu.not(0x55), 0xAA)
         XCTAssertEqual(alu.not(alu.not(0x55)), 0x55)
+    }
+
+    func testNotPreservesCarryAndOverflowFlags() {
+        XCTAssertEqual(alu.add(0x80, 0x80, &flags), 0x00)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.overflow)
+        XCTAssertEqual(alu.not(0xAA), 0x55)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.overflow)
+
+        XCTAssertEqual(alu.add(0x05, 0x01, &flags), 0x06)
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.overflow)
+        XCTAssertEqual(alu.not(0x55), 0xAA)
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.overflow)
     }
 
     func testNotPreservesZeroFlag() {
@@ -480,21 +460,5 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.auxiliaryCarry)
         XCTAssertEqual(alu.not(0xFF), 0x00)
         XCTAssertFalse(flags.auxiliaryCarry)
-    }
-
-    func testNotPreservesCarryAndOverflowFlags() {
-        XCTAssertEqual(alu.add(0x80, 0x80, &flags), 0x00)
-        XCTAssertTrue(flags.carry)
-        XCTAssertTrue(flags.overflow)
-        XCTAssertEqual(alu.not(0xAA), 0x55)
-        XCTAssertTrue(flags.carry)
-        XCTAssertTrue(flags.overflow)
-
-        XCTAssertEqual(alu.add(0x05, 0x01, &flags), 0x06)
-        XCTAssertFalse(flags.carry)
-        XCTAssertFalse(flags.overflow)
-        XCTAssertEqual(alu.not(0x55), 0xAA)
-        XCTAssertFalse(flags.carry)
-        XCTAssertFalse(flags.overflow)
     }
 }
