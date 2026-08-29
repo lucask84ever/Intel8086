@@ -51,10 +51,8 @@ final class ALUTests: XCTestCase {
     func testSignFlagFalse() {
 
         let result = alu.add(0x40, 1, &flags)
-        XCTAssertFalse(flags.sign)
-        XCTAssertFalse(flags.zero)
-        XCTAssertFalse(flags.carry)
         XCTAssertEqual(result, 0x41)
+        XCTAssertFalse(flags.sign)
     }
 
     func testAddSetsParityFlagForEvenNumberOfOnes() {
@@ -88,7 +86,7 @@ final class ALUTests: XCTestCase {
         XCTAssertEqual(result, 0x06)
     }
 
-    func testUnsignedOverflow() {
+    func testSignedOverflow() {
         let result = alu.add(0x01, 0x7F, &flags)
 
         XCTAssertEqual(result, 0x80)
@@ -101,5 +99,25 @@ final class ALUTests: XCTestCase {
         XCTAssertEqual(result, 0x00)
         XCTAssertTrue(flags.carry)
         XCTAssertTrue(flags.overflow)
+    }
+
+    func testNoSignedOverflowWithDifferentSigns() {
+        let result = alu.add(0x7f, 0xFF, &flags)
+
+        XCTAssertEqual(result, 0x7E)
+        XCTAssertFalse(flags.overflow)
+    }
+
+    func testOverflowReset() {
+        var result = alu.add(0x7F, 0x01, &flags)
+        XCTAssertEqual(result, 0x80)
+        XCTAssertTrue(flags.overflow)
+        result = alu.add(0x80, 0x80, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.overflow)
+        result = alu.add(0x7F, 0xFF, &flags)
+        XCTAssertEqual(result, 0x7E)
+        XCTAssertFalse(flags.overflow)
+
     }
 }

@@ -5,9 +5,9 @@ struct ALU {
 
         let value = UInt8(result & 0x0FF)
 
-        let lhsSign = getSign(lhs)
-        let rhsSign = getSign(rhs)
-        let resultSign = getSign(result)
+        let lhsSign = hasSignBit(lhs)
+        let rhsSign = hasSignBit(rhs)
+        let resultSign = hasSignBit(value)
         
         flags.overflow = lhsSign == rhsSign && resultSign != lhsSign
         flags.parity = hasEvenParity(value)
@@ -31,7 +31,7 @@ struct ALU {
         return count % 2 == 0
     }
 
-    private func getSign(_ value: UInt8) -> UInt8 {
-        return value & 0x80
+    private func hasSignBit(_ value: UInt8) -> Bool {
+        return (value & 0x80) != 0
     }
 }
