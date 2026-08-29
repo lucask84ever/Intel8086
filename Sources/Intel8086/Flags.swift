@@ -29,7 +29,7 @@ struct Flags {
         }
     }
 
-    var auxiliary: Bool {
+    var auxiliaryCarry: Bool {
         set {
             if newValue {
                 value |= 0x0010

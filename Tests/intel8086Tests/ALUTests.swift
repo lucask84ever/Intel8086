@@ -18,6 +18,8 @@ final class ALUTests: XCTestCase {
         super.tearDown()
     }
 
+
+// ADD
     func testAddTwoBytes() {
 
         let result = alu.add(5, 3, &flags)
@@ -81,24 +83,24 @@ final class ALUTests: XCTestCase {
         XCTAssertFalse(flags.parity)
     }
 
-    func testAddSetsAuxiliaryCarry() {
+    func testAddSetsauxiliaryCarryCarry() {
 
         var result = alu.add(0x0F, 0x01, &flags)
 
-        XCTAssertTrue(flags.auxiliary)
+        XCTAssertTrue(flags.auxiliaryCarry)
         XCTAssertEqual(result, 0x10)
 
         // second operation
         result = alu.add(0x05, 0x01, &flags)
 
-        XCTAssertFalse(flags.auxiliary)
+        XCTAssertFalse(flags.auxiliaryCarry)
         XCTAssertEqual(result, 0x06)
     }
 
-    func testAddDoesNotSetAuxiliaryCarry() {
+    func testAddDoesNotSetauxiliaryCarryCarry() {
         let result = alu.add(0x05, 0x01, &flags)
 
-        XCTAssertFalse(flags.auxiliary)
+        XCTAssertFalse(flags.auxiliaryCarry)
         XCTAssertEqual(result, 0x06)
     }
 
@@ -112,7 +114,7 @@ final class ALUTests: XCTestCase {
 
     func testSignedOverflowAlsoSetsCarry() {
         let result = alu.add(0x80, 0x80, &flags)
-        
+
         XCTAssertEqual(result, 0x00)
         XCTAssertTrue(flags.carry)
         XCTAssertTrue(flags.overflow)
@@ -140,5 +142,84 @@ final class ALUTests: XCTestCase {
         XCTAssertEqual(result, 0x7E)
         XCTAssertFalse(flags.overflow)
 
+    }
+
+    // SUB
+    func testSubTwoBytes() {
+        let result = alu.sub(0x05, 0x03, &flags)
+        XCTAssertEqual(result, 0x02)
+        XCTAssertFalse(flags.carry)
+    }
+
+    func testSubWrap() {
+        var result = alu.sub(0x00, 0x01, &flags)
+        XCTAssertEqual(result, 0xFF)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.sign)
+
+        result = alu.sub(0x04, 0x03, &flags)
+        XCTAssertEqual(result, 0x01)
+        XCTAssertFalse(flags.sign)
+        XCTAssertFalse(flags.carry)
+    }
+
+    func testResultZero() {
+        var result = alu.sub(0x05, 0x05, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.zero)
+
+        result = alu.sub(0x03, 0x05, &flags)
+        XCTAssertEqual(result, 0xFE)
+        XCTAssertFalse(flags.zero)
+
+        result = alu.sub(0xFF, 0xFF, &flags)
+        XCTAssertEqual(result, 0x00)
+        XCTAssertTrue(flags.zero)
+    }
+
+        func testSubSetsParityFlagForEvenNumberOfOnes() {
+
+        var result = alu.sub(0x05, 0x02, &flags)
+
+        XCTAssertEqual(result, 0x03)
+        XCTAssertTrue(flags.parity)
+
+        // second operation
+        result = alu.sub(0x0A, 0x03, &flags)
+
+        XCTAssertEqual(result, 0x07)
+        XCTAssertFalse(flags.parity)
+    }
+
+    func testCarrySignAndOverflow() {
+        var result = alu.sub(0x80, 0x01, &flags)
+
+        XCTAssertEqual(result, 0x7F)
+        XCTAssertFalse(flags.carry)
+        XCTAssertFalse(flags.sign)
+        XCTAssertTrue(flags.overflow)
+
+        result = alu.sub(0x01, 0x80, &flags)
+        XCTAssertEqual(result, 0x81)
+        XCTAssertTrue(flags.carry)
+        XCTAssertTrue(flags.sign)
+        XCTAssertTrue(flags.overflow)
+
+        result = alu.sub(0x7F, 0x01, &flags)
+        XCTAssertEqual(result, 0x7E)
+        XCTAssertFalse(flags.overflow)
+    }
+
+    func testSubauxiliaryCarry() {
+        var result = alu.sub(0x10, 0x01, &flags)
+
+        XCTAssertEqual(result, 0x0F)
+        XCTAssertTrue(flags.auxiliaryCarry)
+        XCTAssertFalse(flags.carry)
+
+        result = alu.sub(0x00, 0x01, &flags)
+        XCTAssertEqual(result, 0xFF)
+        XCTAssertTrue(flags.auxiliaryCarry)
+        XCTAssertTrue(flags.carry)
     }
 }
