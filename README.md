@@ -23,7 +23,7 @@ Atualmente já temos:
 - [x] Memória de 1 MB
 - [x] Endereçamento segmentado
 - [x] FLAGS
-- [ ] ALU
+- [x] ALU
 - [ ] Instruções
 - [ ] Stack
 - [ ] Interrupções
