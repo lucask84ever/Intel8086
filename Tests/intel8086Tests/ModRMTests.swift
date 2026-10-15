@@ -33,4 +33,14 @@ final class ModRMTests: XCTestCase {
         XCTAssertEqual(modRM.reg, 0b111)
         XCTAssertEqual(modRM.rm, 0b111)
     }
+
+    func testModRMWithDisplacement8() {
+        let decoder = InstructionDecoder(bytes: [
+            0x8b, 0x40, 0x12
+        ])
+
+        XCTAssertEqual(decoder.modRM.mod, 1)
+        XCTAssertEqual(decoder.modRM.reg, 0)
+        XCTAssertEqual(decoder.modRM.rm, 0)
+    }
 }

@@ -2,9 +2,7 @@ struct ModRM {
     let value: UInt8
 
     var mod: UInt8 {
-        get {
-            UInt8(value >> 6)
-        }
+        (value >> 6) & 0x03
     }
 
     var reg: UInt8 {

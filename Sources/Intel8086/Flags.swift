@@ -90,11 +90,11 @@ struct Flags {
             if newValue {
                 value |= 0x0200
             } else {
-                value &= ~0x200
+                value &= ~0x0200
             }
         }
         get {
-            (value & 0x200) != 0
+            (value & 0x0200) != 0
         }
     }
 
@@ -108,12 +108,12 @@ struct Flags {
         }
 
         get {
-            (value & 0x400) != 0
+            (value & 0x0400) != 0
         }
     }
 
     var overflow: Bool {
-                set {
+        set {
             if newValue {
                 value |= 0x0800
             } else {
@@ -122,7 +122,7 @@ struct Flags {
         }
 
         get {
-            (value & 0x800) != 0
+            (value & 0x0800) != 0
         }
     }
 }

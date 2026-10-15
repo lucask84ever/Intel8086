@@ -25,14 +25,14 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFFFE)
     }
 
-    func testChangeParityFlagUsesBitZero() {
+    func testChangeParityFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.parity = true
         XCTAssertEqual(flags.value, 0x0004)
     }
 
-    func testCarryParityCanBeCleared() {
+    func testParityCanBeCleared() {
         var flags = Flags(value: 0x0004)
 
         flags.parity = false
@@ -46,35 +46,35 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFFFB)
     }
 
-    func testChangeauxiliaryCarryFlagUsesBitZero() {
+    func testChangeAuxiliaryCarryFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.auxiliaryCarry = true
         XCTAssertEqual(flags.value, 0x0010)
     }
 
-    func testCarryauxiliaryCarryCanBeCleared() {
+    func testAuxiliaryCarryCanBeCleared() {
         var flags = Flags(value: 0x0010)
 
         flags.auxiliaryCarry = false
         XCTAssertEqual(flags.value, 0x0000)
     }
 
-    func testChangingauxiliaryCarryDoesNotChangeOtherFlags() {
+    func testChangingAuxiliaryCarryDoesNotChangeOtherFlags() {
         var flags = Flags(value: 0xFFFF)
 
         flags.auxiliaryCarry = false
         XCTAssertEqual(flags.value, 0xFFEF)
     }
 
-    func testChangeZeroFlagUsesBitZero() {
+    func testChangeZeroFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.zero = true
         XCTAssertEqual(flags.value, 0x0040)
     }
 
-    func testCarryZeroCanBeCleared() {
+    func testZeroCanBeCleared() {
         var flags = Flags(value: 0x0040)
 
         flags.zero = false
@@ -88,14 +88,14 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFFBF)
     }
 
-    func testChangeSignFlagUsesBitZero() {
+    func testChangeSignFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.sign = true
         XCTAssertEqual(flags.value, 0x0080)
     }
 
-    func testCarrySignCanBeCleared() {
+    func testSignCanBeCleared() {
         var flags = Flags(value: 0x0080)
 
         flags.sign = false
@@ -109,14 +109,14 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFF7F)
     }
 
-    func testChangeTrapFlagUsesBitZero() {
+    func testChangeTrapFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.trap = true
         XCTAssertEqual(flags.value, 0x0100)
     }
 
-    func testCarryTrapCanBeCleared() {
+    func testTrapCanBeCleared() {
         var flags = Flags(value: 0x0100)
 
         flags.trap = false
@@ -130,14 +130,14 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFEFF)
     }
 
-    func testChangeInterruptFlagUsesBitZero() {
+    func testChangeInterruptFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.interrupt = true
         XCTAssertEqual(flags.value, 0x0200)
     }
 
-    func testCarryInterruptCanBeCleared() {
+    func testInterruptCanBeCleared() {
         var flags = Flags(value: 0x0200)
 
         flags.interrupt = false
@@ -151,14 +151,14 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFDFF)
     }
 
-    func testChangeDirectionFlagUsesBitZero() {
+    func testChangeDirectionFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.direction = true
         XCTAssertEqual(flags.value, 0x0400)
     }
 
-    func testCarryDirectionCanBeCleared() {
+    func testDirectionCanBeCleared() {
         var flags = Flags(value: 0x0400)
 
         flags.direction = false
@@ -172,14 +172,14 @@ final class FlagsTests: XCTestCase {
         XCTAssertEqual(flags.value, 0xFBFF)
     }
 
-    func testChangeOverflowFlagUsesBitZero() {
+    func testChangeOverflowFlag() {
         var flags = Flags(value: 0x0000)
 
         flags.overflow = true
         XCTAssertEqual(flags.value, 0x0800)
     }
 
-    func testCarryOverflowCanBeCleared() {
+    func testOverflowCanBeCleared() {
         var flags = Flags(value: 0x0800)
 
         flags.overflow = false
